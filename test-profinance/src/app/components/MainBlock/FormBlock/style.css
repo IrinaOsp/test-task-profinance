@@ -1,0 +1,6 @@
+.select-label + button {
+  margin-top: 0 !important;
+  max-width: 100%;
+  padding: 0 4px;
+  height: 20px;
+}
