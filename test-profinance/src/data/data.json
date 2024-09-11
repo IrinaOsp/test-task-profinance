@@ -1,0 +1,103 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "barcode": "1234567890123",
+      "garment": "Одежда",
+      "article": "Кардиган",
+      "size": "50-60",
+      "available": 0,
+      "itemsInTransit": 40,
+      "totalItems": 30,
+      "price": 200000
+    },
+    {
+      "id": 2,
+      "barcode": "3214567890123",
+      "garment": "Одежда",
+      "article": "Брюки",
+      "size": "50",
+      "available": 6,
+      "itemsInTransit": 32,
+      "totalItems": 4,
+      "price": 900000
+    },
+    {
+      "id": 3,
+      "barcode": "1234567890123",
+      "garment": "Одежда",
+      "article": "Брюки",
+      "size": "50-54",
+      "available": 25,
+      "itemsInTransit": 50,
+      "totalItems": 2,
+      "price": 600000
+    },
+    {
+      "id": 4,
+      "barcode": "1234567890123",
+      "garment": "Одежда",
+      "article": "Брюки",
+      "size": "50-54",
+      "available": 0,
+      "itemsInTransit": 50,
+      "totalItems": 2,
+      "price": 560000
+    },
+    {
+      "id": 5,
+      "barcode": "1234567890123",
+      "garment": "Одежда",
+      "article": "Брюки",
+      "size": "50-54",
+      "available": 0,
+      "itemsInTransit": 50,
+      "totalItems": 2,
+      "price": 560000
+    },
+    {
+      "id": 6,
+      "barcode": "1234567890123",
+      "garment": "Одежда",
+      "article": "Брюки",
+      "size": "50-54",
+      "available": 0,
+      "itemsInTransit": 50,
+      "totalItems": 2,
+      "price": 560000
+    },
+    {
+      "id": 7,
+      "barcode": "1234567890123",
+      "garment": "Одежда",
+      "article": "Брюки",
+      "size": "50-54",
+      "available": 0,
+      "itemsInTransit": 50,
+      "totalItems": 2,
+      "price": 560000
+    },
+    {
+      "id": 8,
+      "barcode": "1234567890123",
+      "garment": "Одежда",
+      "article": "Брюки",
+      "size": "50-54",
+      "available": 0,
+      "itemsInTransit": 50,
+      "totalItems": 2,
+      "price": 560000
+    },
+    {
+      "id": 9,
+      "barcode": "1234567890123",
+      "garment": "Одежда",
+      "article": "Брюки",
+      "size": "50-54",
+      "available": 0,
+      "itemsInTransit": 50,
+      "totalItems": 2,
+      "price": 560000
+    }
+  ]
+}
