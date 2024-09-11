@@ -1,3 +1,4 @@
+import ContactsCard from "../ContactsCard/ContactsCard";
 import ControlCard from "../ControlCard/ControlCard";
 
 export default function AsidePanel() {
@@ -5,6 +6,7 @@ export default function AsidePanel() {
     <aside>
       AsidePanel
       <ControlCard />
+      <ContactsCard />
     </aside>
   );
 }
