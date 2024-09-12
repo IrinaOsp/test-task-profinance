@@ -18,16 +18,25 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { columns } from "@/app/components/MainBlock/TableBlock/Columns";
 import { formatPrice } from "@/utils/helpers";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { setData } from "@/redux/data/DataSlice";
+import { Input } from "@/components/ui/input";
+import { TableRowData } from "@/types/types";
 
 export default function TableBlock() {
+  const dispatch = useDispatch();
   const data = useSelector((state: RootState) => state.dataSlice.data);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [editingCell, setEditingCell] = useState<{
+    rowId: string | null;
+    columnId: string | null;
+  }>({ rowId: null, columnId: null });
+
+  const [tempValue, setTempValue] = useState<string | number>("");
 
   const formattedData = useMemo(
     () => data.map((row) => ({ ...row, price: formatPrice(row.price) })),
@@ -38,14 +47,48 @@ export default function TableBlock() {
     data: formattedData,
     columns,
     onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     state: {
       sorting,
-      columnFilters,
     },
   });
+
+  const handleDoubleClick = (
+    rowId: string,
+    columnId: string,
+    initialValue: any
+  ) => {
+    console.log(initialValue, rowId, columnId);
+    setEditingCell({ rowId, columnId });
+    setTempValue(initialValue);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTempValue(e.target.value);
+  };
+
+  const handleBlur = (rowId: string, columnId: string) => {
+    console.log("blur", rowId, columnId, tempValue, typeof tempValue);
+    const updatedData = data.map((row) => {
+      console.log(row.id === +rowId + 1);
+      console.log(
+        typeof tempValue === typeof row[columnId as keyof typeof row]
+      );
+      if (row.id === +rowId + 1) {
+        return {
+          ...row,
+          [columnId]:
+            typeof tempValue === typeof row[columnId as keyof typeof row]
+              ? tempValue
+              : +tempValue,
+        };
+      }
+      return row;
+    });
+    dispatch(setData(updatedData));
+    setEditingCell({ rowId: null, columnId: null });
+  };
 
   return (
     <ScrollArea type="always" className="w-full mt-2">
@@ -78,7 +121,40 @@ export default function TableBlock() {
               <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id} className="text-center">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    {editingCell.rowId === cell.row.id &&
+                    editingCell.columnId === cell.column.id ? (
+                      <Input
+                        type={
+                          cell.column.id === "barcode" ||
+                          cell.column.id === "available" ||
+                          cell.column.id === "itemsInTransit" ||
+                          cell.column.id === "totalItems" ||
+                          cell.column.id === "price"
+                            ? "number"
+                            : "text"
+                        }
+                        min={0}
+                        value={tempValue}
+                        onChange={handleInputChange}
+                        onBlur={() => handleBlur(cell.row.id, cell.column.id)}
+                        autoFocus
+                      />
+                    ) : (
+                      <div
+                        onDoubleClick={() =>
+                          handleDoubleClick(
+                            cell.row.id,
+                            cell.column.id,
+                            cell.getValue()
+                          )
+                        }
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </div>
+                    )}
                   </TableCell>
                 ))}
               </TableRow>
