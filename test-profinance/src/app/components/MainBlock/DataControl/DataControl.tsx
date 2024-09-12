@@ -2,7 +2,7 @@ import { FileUp, FolderInput, X } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { fetchData } from "@/redux/data/DataSlice";
+import { clearData, fetchData } from "@/redux/data/DataSlice";
 import { AppDispatch } from "@/redux/store";
 
 export default function DataControl() {
@@ -10,6 +10,10 @@ export default function DataControl() {
 
   const handleDataUpload = async () => {
     dispatch(fetchData());
+  };
+
+  const handleDataClear = () => {
+    dispatch(clearData());
   };
 
   return (
@@ -28,7 +32,7 @@ export default function DataControl() {
         </div>
         <div className="flex">
           <Separator orientation="vertical" />
-          <Button variant="ghost">
+          <Button variant="ghost" onClick={handleDataClear}>
             Очистить <X className="ml-2 size-4 font-bold" />
           </Button>
         </div>
