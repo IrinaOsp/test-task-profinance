@@ -4,7 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { BookText, FileUp, FolderInput, X } from "lucide-react";
+import { BookText, FileUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import "./style.css";
-import { Separator } from "@/components/ui/separator";
+import DataControl from "../DataControl/DataControl";
 
 const FormSchema = z.object({
   barcode: z.number(),
@@ -136,11 +136,10 @@ export default function FormBlock() {
                     </FormControl>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectItem value="apple">Apple</SelectItem>
-                        <SelectItem value="banana">Banana</SelectItem>
-                        <SelectItem value="blueberry">Blueberry</SelectItem>
-                        <SelectItem value="grapes">Grapes</SelectItem>
-                        <SelectItem value="pineapple">Pineapple</SelectItem>
+                        <SelectItem value="apple">Джинсы</SelectItem>
+                        <SelectItem value="banana">Брюки</SelectItem>
+                        <SelectItem value="blueberry">Юбки</SelectItem>
+                        <SelectItem value="grapes">Куртки</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -160,28 +159,7 @@ export default function FormBlock() {
         </form>
       </Form>
 
-      <div className="mt-6">
-        <Separator />
-        <div className="flex justify-between my-1">
-          <div>
-            <Button variant="ghost">
-              <FolderInput className="size-4 mr-2" />
-              Загрузить данные из csv
-            </Button>
-            <Button variant="ghost">
-              <FileUp className="size-4 mr-2" />
-              Изменить данные
-            </Button>
-          </div>
-          <div className="flex">
-            <Separator orientation="vertical" />
-            <Button variant="ghost">
-              Очистить <X className="ml-2 size-4 font-bold" />
-            </Button>
-          </div>
-        </div>
-        <Separator />
-      </div>
+      <DataControl />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import AsidePanel from "./components/AsidePanel/AsidePanel";
+import { Providers } from "@/redux/provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,10 +30,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <main className="flex bg-slate-100">
-          <AsidePanel />
-          {children}
-        </main>
+        <Providers>
+          <main className="flex bg-slate-100">
+            <AsidePanel />
+            {children}
+          </main>
+        </Providers>
       </body>
     </html>
   );
