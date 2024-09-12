@@ -26,6 +26,9 @@ import {
 } from "@/components/ui/select";
 import "./style.css";
 import DataControl from "../DataControl/DataControl";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { saveAs } from "file-saver";
 
 const FormSchema = z.object({
   barcode: z.number(),
@@ -35,6 +38,8 @@ const FormSchema = z.object({
 });
 
 export default function FormBlock() {
+  const data = useSelector((state: RootState) => state.dataSlice.data);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
@@ -50,8 +55,16 @@ export default function FormBlock() {
     });
   }
 
+  const handleExport = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
+    saveAs(blob, "data.json");
+  };
+
   return (
-    <div>
+    <div className="max-w-full">
       <div className="my-3">
         <h2 className="inline-block text-lg mr-5">
           Остатки сформированы на 01.04.2023 г.
@@ -64,7 +77,7 @@ export default function FormBlock() {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full mt-4">
-          <div className="flex gap-2 mb-2">
+          <div className="flex flex-wrap gap-2 mb-2">
             <FormField
               control={form.control}
               name="barcode"
@@ -151,7 +164,7 @@ export default function FormBlock() {
             <Button type="submit" className="rounded-2xl bg-blue-600">
               Сформировать
             </Button>
-            <Button className="rounded-2xl bg-slate-800">
+            <Button onClick={handleExport} className="rounded-2xl bg-slate-800">
               <FileUp className="size-4 mr-2" />
               Экспорт
             </Button>
