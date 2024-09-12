@@ -28,10 +28,10 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-100 w-svw min-h-screen overflow-x-hidden`}
       >
         <Providers>
-          <main className="flex bg-slate-100">
+          <main className="flex w-full max-w-screen-2xl mx-auto">
             <AsidePanel />
             {children}
           </main>
