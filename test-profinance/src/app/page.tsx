@@ -4,7 +4,7 @@ import UserInfo from "./components/MainBlock/UserInfo/UserInfo";
 
 export default function Home() {
   return (
-    <div className="p-4 max-w-[70%]">
+    <div className="p-4 max-w-full lg:max-w-[70%]">
       <UserInfo />
       <FormBlock />
       <TableBlock />

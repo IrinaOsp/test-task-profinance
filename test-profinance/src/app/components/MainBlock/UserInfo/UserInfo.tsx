@@ -5,7 +5,7 @@ import { CalendarDays, CircleUserRound, MoveRight } from "lucide-react";
 export default function UserInfo() {
   return (
     <Card className="w-full">
-      <CardContent className="flex justify-between items-center py-1 rounded-2xl">
+      <CardContent className="flex flex-wrap gap-2 justify-between items-center py-1 rounded-2xl">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-1 mr-4">
             <CircleUserRound className="size-4" />

@@ -13,14 +13,14 @@ export default function ControlCard() {
     <div>
       <Card className="bg-slate-900 text-white rounded-2xl">
         <CardHeader className="p-3">
-          <CardTitle className="flex gap-1 items-center justify-between">
+          <CardTitle className="flex flex-wrap gap-1 items-center justify-between">
             <p className="flex text-lg items-baseline">
               <span className="block rounded-md p-1 leading-4 bg-blue-600">
                 ФИН
               </span>
               <span className="block p-1">Контроль</span>
             </p>
-            <Button className="h-7 px-2 bg-slate-800 text-slate-500 rounded-3xl">
+            <Button className="ml-auto mr-0 h-7 px-2 bg-slate-800 text-slate-500 rounded-3xl">
               Меню
               <X className="ml-2 size-4 font-bold" />
             </Button>
@@ -30,11 +30,11 @@ export default function ControlCard() {
           <Accordion
             type="single"
             collapsible
-            className="w-full lg:w-72 border-b-0 rounded-md"
+            className="w-full border-b-0 rounded-md max-lg:flex flex-wrap justify-between gap-4"
           >
             <AccordionItem
               value="settings"
-              className="mb-2 px-3 bg-slate-800 border-b-0 rounded-md"
+              className="flex-1 mb-2 px-3 bg-slate-800 border-b-0 rounded-md"
             >
               <AccordionTrigger>
                 <span className="flex gap-2 items-center">
@@ -47,10 +47,10 @@ export default function ControlCard() {
 
             <AccordionItem
               value="Data Input"
-              className="mb-2 px-3 bg-slate-800 border-b-0 rounded-md"
+              className="flex-1 mb-2 px-3 bg-slate-800 border-b-0 rounded-md"
             >
               <AccordionTrigger>
-                <span className="flex gap-2 items-center">
+                <span className="flex gap-2 items-center text-left">
                   <NotebookPen className="size-4" />
                   Внесение данных
                 </span>
@@ -60,7 +60,7 @@ export default function ControlCard() {
 
             <AccordionItem
               value="Reports"
-              className="mb-2 px-3 bg-slate-800 border-b-0 rounded-md"
+              className="flex-1 mb-2 px-3 bg-slate-800 border-b-0 rounded-md"
             >
               <AccordionTrigger>
                 <span className="flex gap-2 items-center">
@@ -73,7 +73,7 @@ export default function ControlCard() {
 
             <AccordionItem
               value="Knowledge Base"
-              className="mb-2 px-3 bg-slate-800 border-b-0 rounded-md"
+              className="flex-1 mb-2 px-3 bg-slate-800 border-b-0 rounded-md"
             >
               <AccordionTrigger>
                 <span className="flex gap-2 items-center">

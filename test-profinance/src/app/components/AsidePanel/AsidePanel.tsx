@@ -6,7 +6,7 @@ import { MessageCircleMore } from "lucide-react";
 
 export default function AsidePanel() {
   return (
-    <aside className="m-3 flex flex-col gap-3 max-w-[30%]">
+    <aside className="mr-1 p-2 pr-3 flex flex-col gap-3 w-full xl:max-w-[30%]">
       <ControlCard />
       <ContactsCard />
       <Link
