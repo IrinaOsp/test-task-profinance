@@ -10,7 +10,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
@@ -25,11 +24,10 @@ import { formatPrice } from "@/utils/helpers";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { setData } from "@/redux/data/DataSlice";
 import { Input } from "@/components/ui/input";
-import { TableRowData } from "@/types/types";
 
 export default function TableBlock() {
   const dispatch = useDispatch();
-  const data = useSelector((state: RootState) => state.dataSlice.data);
+  const { data, filter } = useSelector((state: RootState) => state.dataSlice);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [editingCell, setEditingCell] = useState<{
     rowId: string | null;
@@ -38,9 +36,31 @@ export default function TableBlock() {
 
   const [tempValue, setTempValue] = useState<string | number>("");
 
+  const filteredData = useMemo(
+    () =>
+      [...data].filter((row) => {
+        return (
+          row.barcode
+            .toLowerCase()
+            .includes(filter.barcode ? filter.barcode.toLowerCase() : "") &&
+          row.garment
+            .toLowerCase()
+            .includes(filter.garment ? filter.garment.toLowerCase() : "") &&
+          row.size
+            .toLowerCase()
+            .includes(filter.size ? filter.size.toLowerCase() : "") &&
+          row.article
+            .toLowerCase()
+            .includes(filter.article ? filter.article.toLowerCase() : "")
+        );
+      }),
+    [data, filter]
+  );
+
   const formattedData = useMemo(
-    () => data.map((row) => ({ ...row, price: formatPrice(row.price) })),
-    [data]
+    () =>
+      filteredData.map((row) => ({ ...row, price: formatPrice(row.price) })),
+    [filteredData]
   );
 
   const table = useReactTable({
@@ -59,7 +79,6 @@ export default function TableBlock() {
     columnId: string,
     initialValue: any
   ) => {
-    console.log(initialValue, rowId, columnId);
     setEditingCell({ rowId, columnId });
     setTempValue(initialValue);
   };
@@ -69,12 +88,7 @@ export default function TableBlock() {
   };
 
   const handleBlur = (rowId: string, columnId: string) => {
-    console.log("blur", rowId, columnId, tempValue, typeof tempValue);
     const updatedData = data.map((row) => {
-      console.log(row.id === +rowId + 1);
-      console.log(
-        typeof tempValue === typeof row[columnId as keyof typeof row]
-      );
       if (row.id === +rowId + 1) {
         return {
           ...row,
@@ -125,7 +139,6 @@ export default function TableBlock() {
                     editingCell.columnId === cell.column.id ? (
                       <Input
                         type={
-                          cell.column.id === "barcode" ||
                           cell.column.id === "available" ||
                           cell.column.id === "itemsInTransit" ||
                           cell.column.id === "totalItems" ||

@@ -3,6 +3,12 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface DataState {
   data: TableRowData[];
+  filter: {
+    barcode: string;
+    garment: string;
+    size: string;
+    article: string;
+  };
 }
 
 export const fetchData = createAsyncThunk("data/fetchData", async () => {
@@ -13,6 +19,12 @@ export const fetchData = createAsyncThunk("data/fetchData", async () => {
 
 const initialState: DataState = {
   data: [],
+  filter: {
+    barcode: "",
+    garment: "",
+    size: "",
+    article: "",
+  },
 };
 
 const dataSlice = createSlice({
@@ -25,6 +37,9 @@ const dataSlice = createSlice({
     clearData(state) {
       state.data = [];
     },
+    setFilter: (state, action) => {
+      state.filter = { ...state.filter, ...action.payload };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchData.fulfilled, (state, action) => {
@@ -33,6 +48,6 @@ const dataSlice = createSlice({
   },
 });
 
-export const { setData, clearData } = dataSlice.actions;
+export const { setData, clearData, setFilter } = dataSlice.actions;
 
 export default dataSlice.reducer;

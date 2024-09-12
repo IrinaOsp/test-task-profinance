@@ -69,13 +69,13 @@
     {
       "id": 7,
       "barcode": "1234567890123",
-      "garment": "Одежда",
-      "article": "Брюки",
-      "size": "50-54",
+      "garment": "Обувь",
+      "article": "Сапоги",
+      "size": "40",
       "available": 0,
       "itemsInTransit": 50,
       "totalItems": 2,
-      "price": 560000
+      "price": 1560000
     },
     {
       "id": 8,
@@ -90,14 +90,14 @@
     },
     {
       "id": 9,
-      "barcode": "1234567890123",
-      "garment": "Одежда",
-      "article": "Брюки",
-      "size": "50-54",
+      "barcode": "1000567890123",
+      "garment": "Обувь",
+      "article": "Туфли",
+      "size": "38",
       "available": 0,
       "itemsInTransit": 50,
       "totalItems": 2,
-      "price": 560000
+      "price": 960000
     }
   ]
 }

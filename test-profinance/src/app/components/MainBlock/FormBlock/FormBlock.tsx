@@ -14,7 +14,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -26,33 +25,35 @@ import {
 } from "@/components/ui/select";
 import "./style.css";
 import DataControl from "../DataControl/DataControl";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
 import { saveAs } from "file-saver";
+import { setFilter } from "@/redux/data/DataSlice";
 
 const FormSchema = z.object({
-  barcode: z.number(),
-  article: z.string(),
-  size: z.string(),
-  category: z.string(),
+  barcode: z.string().optional(),
+  garment: z.string().optional(),
+  size: z.string().optional(),
+  article: z.string().optional(),
 });
 
 export default function FormBlock() {
+  const dispatch = useDispatch<AppDispatch>();
   const data = useSelector((state: RootState) => state.dataSlice.data);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      barcode: "",
+      garment: "",
+      size: "",
+      article: "",
+    },
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    if (data.article === "all") data.article = "";
+    dispatch(setFilter(data));
   }
 
   const handleExport = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -137,22 +138,30 @@ export default function FormBlock() {
             />
             <FormField
               control={form.control}
-              name="category"
+              name="garment"
               render={({ field }) => (
                 <FormItem className="max-w-36 py-1 px-2 rounded-2xl bg-white border border-slate-200">
                   <FormLabel className="select-label">Категория</FormLabel>
                   <Select onValueChange={field.onChange}>
                     <FormControl className="mt-0">
                       <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Джинсы" />
+                        <SelectValue
+                          placeholder={
+                            data.length ? data[0].garment : "Выберите категорию"
+                          }
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectItem value="apple">Джинсы</SelectItem>
-                        <SelectItem value="banana">Брюки</SelectItem>
-                        <SelectItem value="blueberry">Юбки</SelectItem>
-                        <SelectItem value="grapes">Куртки</SelectItem>
+                        {Array.from(
+                          new Set(data.map((item) => item.garment))
+                        ).map((item) => (
+                          <SelectItem key={item} value={item}>
+                            {item}
+                          </SelectItem>
+                        ))}
+                        <SelectItem value="all">Все категории</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
