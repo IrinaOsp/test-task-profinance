@@ -77,7 +77,7 @@ export default function TableBlock() {
   const handleDoubleClick = (
     rowId: string,
     columnId: string,
-    initialValue: any
+    initialValue: string | number
   ) => {
     setEditingCell({ rowId, columnId });
     setTempValue(initialValue);
@@ -158,7 +158,7 @@ export default function TableBlock() {
                           handleDoubleClick(
                             cell.row.id,
                             cell.column.id,
-                            cell.getValue()
+                            cell.getValue() as string | number
                           )
                         }
                       >
