@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Table,
   TableBody,
@@ -7,79 +9,108 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import fs from "fs";
-import path from "path";
+import {
+  ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+} from "@tanstack/react-table";
+import { useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { columns } from "@/app/components/MainBlock/TableBlock/Columns";
+import { formatPrice } from "@/utils/helpers";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
-interface TableData {
-  id: number;
-  barcode: string;
-  garment: string;
-  article: string;
-  size: string;
-  available: number;
-  itemsInTransit: number;
-  totalItems: number;
-  price: number;
-}
+export default function TableBlock() {
+  const data = useSelector((state: RootState) => state.dataSlice.data);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
 
-export default async function TableBlock() {
-  async function getData() {
-    const filePath = path.join(process.cwd(), "src", "data", "data.json");
-    const jsonData = fs.readFileSync(filePath, "utf-8");
-    const res = await JSON.parse(jsonData);
-    return res;
-  }
+  const formattedData = useMemo(
+    () => data.map((row) => ({ ...row, price: formatPrice(row.price) })),
+    [data]
+  );
 
-  const data: TableData[] = await getData().then((res) => res.data);
+  const table = useReactTable({
+    data: formattedData,
+    columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting,
+      columnFilters,
+    },
+  });
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="text-center">Баркод</TableHead>
-          <TableHead className="text-center">Предмет</TableHead>
-          <TableHead className="text-center">Артикул поставщика</TableHead>
-          <TableHead className="text-center">Размер</TableHead>
-          <TableHead className="text-center">Доступно к заказу</TableHead>
-          <TableHead className="text-center">
-            Товары в пути <br />{" "}
-            <span className="text-slate-400 text-sm">(заказы и возвраты)</span>
-          </TableHead>
-          <TableHead className="text-center">Итого кол-во товара</TableHead>
-          <TableHead className="text-center">Цена за ед.</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {data.map((item) => (
-          <TableRow key={item.id}>
-            <TableCell className="text-center">{item.barcode}</TableCell>
-            <TableCell className="text-center">{item.garment}</TableCell>
-            <TableCell className="text-center">{item.article}</TableCell>
-            <TableCell className="text-center">{item.size}</TableCell>
-            <TableCell className="text-center">{item.available}</TableCell>
-            <TableCell className="text-center">{item.itemsInTransit}</TableCell>
-            <TableCell className="text-center">{item.totalItems}</TableCell>
-            <TableCell className="text-center">
-              {(item.price / 100).toFixed(2)}
+    <ScrollArea type="always" className="w-full mt-2">
+      <ScrollBar
+        orientation="horizontal"
+        className="mt-2 h-2 rounded-lg bg-blue-600"
+      />
+      <Table className="py-4">
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                );
+              })}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id} className="text-center">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                Файл с данными не загружен. Нажмите на кнопку &apos;Загрузить
+                данные из csv&apos;
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell className="text-right">Итого</TableCell>
+            <TableCell colSpan={3}></TableCell>
+            <TableCell className="text-center font-bold">
+              {data.reduce((sum, item) => sum + item.available, 0)}
+            </TableCell>
+            <TableCell className="text-center font-bold">
+              {data.reduce((sum, item) => sum + item.itemsInTransit, 0)}
+            </TableCell>
+            <TableCell className="text-center font-bold">
+              {data.reduce((sum, item) => sum + item.totalItems, 0)}
+            </TableCell>
+            <TableCell className="text-center font-bold">
+              {formatPrice(data.reduce((sum, item) => sum + item.price, 0))}
             </TableCell>
           </TableRow>
-        ))}
-      </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell className="text-right">Итого</TableCell>
-          <TableCell colSpan={4}></TableCell>
-          <TableCell className="text-center font-bold">
-            {data.reduce((sum, item) => sum + item.available, 0)}
-          </TableCell>
-          <TableCell className="text-center font-bold">
-            {data.reduce((sum, item) => sum + item.itemsInTransit, 0)}
-          </TableCell>
-          <TableCell className="text-center font-bold">
-            {(data.reduce((sum, item) => sum + item.price, 0) / 100).toFixed(2)}
-          </TableCell>
-        </TableRow>
-      </TableFooter>
-    </Table>
+        </TableFooter>
+      </Table>
+    </ScrollArea>
   );
 }
