@@ -27,7 +27,9 @@ import { Input } from "@/components/ui/input";
 
 export default function TableBlock() {
   const dispatch = useDispatch();
-  const { data, filter } = useSelector((state: RootState) => state.dataSlice);
+  const { data, filteredData } = useSelector(
+    (state: RootState) => state.dataSlice
+  );
   const [sorting, setSorting] = useState<SortingState>([]);
   const [editingCell, setEditingCell] = useState<{
     rowId: string | null;
@@ -36,26 +38,26 @@ export default function TableBlock() {
 
   const [tempValue, setTempValue] = useState<string | number>("");
 
-  const filteredData = useMemo(
-    () =>
-      [...data].filter((row) => {
-        return (
-          row.barcode
-            .toLowerCase()
-            .includes(filter.barcode ? filter.barcode.toLowerCase() : "") &&
-          row.garment
-            .toLowerCase()
-            .includes(filter.garment ? filter.garment.toLowerCase() : "") &&
-          row.size
-            .toLowerCase()
-            .includes(filter.size ? filter.size.toLowerCase() : "") &&
-          row.article
-            .toLowerCase()
-            .includes(filter.article ? filter.article.toLowerCase() : "")
-        );
-      }),
-    [data, filter]
-  );
+  // const filteredData = useMemo(
+  //   () =>
+  //     [...data].filter((row) => {
+  //       return (
+  //         row.barcode
+  //           .toLowerCase()
+  //           .includes(filter.barcode ? filter.barcode.toLowerCase() : "") &&
+  //         row.garment
+  //           .toLowerCase()
+  //           .includes(filter.garment ? filter.garment.toLowerCase() : "") &&
+  //         row.size
+  //           .toLowerCase()
+  //           .includes(filter.size ? filter.size.toLowerCase() : "") &&
+  //         row.article
+  //           .toLowerCase()
+  //           .includes(filter.article ? filter.article.toLowerCase() : "")
+  //       );
+  //     }),
+  //   [data, filter]
+  // );
 
   const formattedData = useMemo(
     () =>
@@ -105,9 +107,15 @@ export default function TableBlock() {
   };
 
   return (
-    <ScrollArea type="always" className="w-full mt-2">
+    <ScrollArea type="always" className="w-full h-[350px] mt-2">
       <ScrollBar
         orientation="horizontal"
+        className="mt-2 h-2 rounded-lg bg-blue-600"
+      />
+      <ScrollBar
+        orientation="vertical"
+        asChild
+        forceMount
         className="mt-2 h-2 rounded-lg bg-blue-600"
       />
       <Table className="py-4">

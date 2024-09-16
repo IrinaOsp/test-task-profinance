@@ -40,6 +40,9 @@ const FormSchema = z.object({
 export default function FormBlock() {
   const dispatch = useDispatch<AppDispatch>();
   const data = useSelector((state: RootState) => state.dataSlice.data);
+  const filteredData = useSelector(
+    (state: RootState) => state.dataSlice.filteredData
+  );
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -58,7 +61,7 @@ export default function FormBlock() {
 
   const handleExport = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const blob = new Blob([JSON.stringify(data, null, 2)], {
+    const blob = new Blob([JSON.stringify(filteredData, null, 2)], {
       type: "application/json",
     });
     saveAs(blob, "data.json");
